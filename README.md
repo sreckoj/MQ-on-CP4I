@@ -133,12 +133,12 @@ The following picture shows the test configuration:
 
 ### Create a receiver channel and local queue on the queue manager on OpenShift
 
-Update the ConfigMap by adding the following MQSC commands
+Update the ConfigMap by adding the following MQSC commands (watch out YAML indentations)
 
 ```sh
 DEFINE CHANNEL(QM1.TO.QM2) CHLTYPE(RCVR) SSLCIPH(ANY_TLS12_OR_HIGHER) SSLCAUTH(OPTIONAL)
 DEFINE QLOCAL(TESTQ) REPLACE
 ```
 
-Restart (delete) mq pod to apply change in the ConfigMap. If the queue manager instance is called *qm2* and if it is a single instance the pod name is *qm2-ibm-mq-0*.
+**Restart (delete) mq pod** to apply change in the ConfigMap. If the queue manager instance is called *qm2* and if it is a single instance the pod name is *qm2-ibm-mq-0*.
 
