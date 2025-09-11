@@ -179,7 +179,7 @@ spec:
 
 >Note 1: We are using *podman* here. The same commands can be executed using *docker* CLI. 
 
->Note 2: If you are using Windows or Mac, you may need to start the podman machine first: `podman machine start` See podman's documentation for the details.
+>Note 2: If you are using Windows or Mac, you may need to start the podman machine first:<br> `podman machine start` <br>See podman's documentation for the details.
 
 Pull the image from IBM's public registry:
 ```sh
