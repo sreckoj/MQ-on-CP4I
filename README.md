@@ -175,6 +175,25 @@ spec:
     termination: passthrough
 ```
 
+### Determine the hostname of the MQ running on OpenShift
+
+Use the "normal" (not SNI) MQ route. If the queue manager resource name is *qm2* like in this example, the route name is by default: *qm2-ibm-mq-qm*.
+
+List routes (with assumption that you are already located in the right namespace):
+```sh
+oc get routes
+```
+
+Obtain the route hostname:
+```sh
+oc get route qm2-ibm-mq-qm -o jsonpath="{.spec.host}"
+```
+
+**We will need it later when create the sender channel**.
+
+In my installation it is:
+*qm2-ibm-mq-qm-qmtest.apps.itz-k2m7zn.infra01-lb.fra02.techzone.ibm.com*
+
 ### Pull MQ image on the local machine
 
 >Note 1: We are using *podman* here. The same commands can be executed using *docker* CLI. 
@@ -205,5 +224,17 @@ podman run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --volume qm1data:/mnt/mqm
 ```
 
 ### Enter the container
+
+Run:
+```sh
+podman exec -it QM1 bash
+```
+And you will appear at the command prompt of the container.
+
+
+## MQ web console
+
+https://localhost:9443/ibmmq/console
+
 
 
