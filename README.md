@@ -2,7 +2,9 @@
 
 >NOTE: This is a work in progress. It's not finished yet.
 
-## Prepare certificates
+## Prepare a queue manager on OpenShift
+
+### Prepare certificates
 
 Create a separate directory for the certificates
 ```sh
@@ -26,7 +28,7 @@ Create queue manager certificate signed with CA:
 openssl x509 -req -in queuemanager.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out queuemanager.crt -days 365 -sha512
 ```
 
-## Create secret with queue manager certificates
+### Create secret with queue manager certificates
 
 So far, we have:
 - ca.crt
