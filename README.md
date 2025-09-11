@@ -142,3 +142,35 @@ DEFINE QLOCAL(TESTQ) REPLACE
 
 **Restart (delete) mq pod** to apply change in the ConfigMap. If the queue manager instance is called *qm2* and if it is a single instance the pod name is *qm2-ibm-mq-0*.
 
+### Create SNI route for the receiver channel QM1.TO.QM2
+
+The route points to the same service as the main route. Its host name represents channel's SNI.
+Please see the following document for the explanation: https://www.ibm.com/docs/en/ibm-mq/9.4.x?topic=dcqmumo-configuring-route-connect-queue-manager-from-outside-red-hat-openshift-cluster
+
+The route name can be anything. The **hostname** is built form the **channel name** using the following formula:
+- Change all capital letters to small letters
+- Leave numbers unchanged
+- Change all other characters (including small letters if they initially exist in the channel name) to hexadecimal representation followed by "-" 
+- Add *.chl.mq.ibm.com* as the hostname domain
+
+In our case the channel name is: <br>
+**QM1.TO.QM2**<br>
+The hexadecimal representation of **dot** character is **2e**<br>
+Therefore the hostname should be:<br>
+**qm12e-to2e-qm2.chl.mq.ibm.com**
+
+```yaml
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: qm1-to-qm2-rcvr-channel
+spec:
+  host: qm12e-to2e-qm2.chl.mq.ibm.com
+  to:
+    kind: Service
+    name: qm2-ibm-mq
+  port:
+    targetPort: 1414
+  tls:
+    termination: passthrough
+```
