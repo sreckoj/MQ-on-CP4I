@@ -139,3 +139,6 @@ Update the ConfigMap by adding the following MQSC commands
 DEFINE CHANNEL(QM1.TO.QM2) CHLTYPE(RCVR) SSLCIPH(ANY_TLS12_OR_HIGHER) SSLCAUTH(OPTIONAL)
 DEFINE QLOCAL(TESTQ) REPLACE
 ```
+
+Restart (delete) mq pod to apply change in the ConfigMap. If the queue manager instance is called *qm2* and if it is a single instance the pod name is *qm2-ibm-mq-0*.
+
