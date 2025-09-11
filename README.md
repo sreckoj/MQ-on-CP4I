@@ -174,3 +174,13 @@ spec:
   tls:
     termination: passthrough
 ```
+
+### Pull MQ image on the local machine
+
+>Note 1: We are using *podman* here. The same commands can be executed using *docker* CLI. 
+
+>Note 2: If you are running on Windows or Mac, it might happen that you need to start podman machine first:
+```sh
+podman machine start
+```
+See podman's documentatio for the details.
