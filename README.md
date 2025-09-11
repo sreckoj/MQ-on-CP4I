@@ -193,4 +193,12 @@ It will be mounted to the container and will be used for MQ peristent data
 podman volume create qm1data
 ```
 
+### Run container
 
+There are several environment variables that can be provided to the container. Please see https://github.com/ibm-messaging/mq-container/blob/master/docs/usage.md for more details. 
+
+>Note: One of the things that we do in the example provided below is mounting the *workdir* directory to the directory inside the contntainer (*--volume /Users/sreckojanjic/MQ/workdir:/tmp/workdir*) so that the previously created certificates are available inside the container. This is probably not the best way for managing containers but it is good enough for testing. 
+
+```sh
+podman run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --volume qm1data:/mnt/mqm --volume /Users/sreckojanjic/MQ/workdir:/tmp/workdir --publish 1414:1414 --publish 9443:9443 --detach --env MQ_APP_USER=app --env MQ_APP_PASSWORD=pa55w0rd --env MQ_ADMIN_USER=admin --env MQ_ADMIN_PASSWORD=pa55w0rd --name QM1 icr.io/ibm-messaging/mq:latest
+```
