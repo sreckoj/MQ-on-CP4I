@@ -223,16 +223,57 @@ Run:
 podman run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --volume qm1data:/mnt/mqm --volume /Users/sreckojanjic/MQ/workdir:/tmp/workdir --publish 1414:1414 --publish 9443:9443 --detach --env MQ_APP_USER=app --env MQ_APP_PASSWORD=pa55w0rd --env MQ_ADMIN_USER=admin --env MQ_ADMIN_PASSWORD=pa55w0rd --name QM1 icr.io/ibm-messaging/mq:latest
 ```
 
-### Enter the container
+### Configure the local queue manager
 
-Run:
+We have to setup certificate, create sender channel, transmit and remote queue.
+
+"Enter" the container (the name of the previously created container is QM1 - same as the name of the queue manager):
 ```sh
 podman exec -it QM1 bash
 ```
-And you will appear at the command prompt of the container.
+
+Navigate to the location where certificates are stored:
+```sh
+cd /var/mqm/qmgrs/QM1/ssl
+```
+
+Copy self-signed CA certificate from the previously mounted temporary directory:
+```sh
+cp /tmp/workdir/ca.crt .
+```
+
+Create key database:
+```sh
+runmqakm -keydb -create -db key.kdb -type cms -pw passw0rd -stash
+```
+
+Store the certificate to it:
+```sh
+runmqakm -cert -add -db key.kdb -pw passw0rd -label remoteca -file ca.crt
+```
+
+Run MQSC
+```sh
+runmqsc QM1
+```
+
+Define transmit queue:
+```sh
+DEFINE QLOCAL('TO.QM2') USAGE(XMITQ)
+```
+
+Define remote queue:
+```sh
+DEFINE QREMOTE('RTESTQ') RNAME('TESTQ') RQMNAME('QM2') XMITQ('TO.QM2')
+```
+
+Define sender channel - please note that we use here previously obtained route hostname and port 443:
+```sh
+DEFINE CHANNEL('QM1.TO.QM2') CHLTYPE(SDR) TRPTYPE(TCP) XMITQ('TO.QM2') SSLCIPH(ANY_TLS12_OR_HIGHER) SSLCAUTH(OPTIONAL) CONNAME('qm2-ibm-mq-qm-qmtest.apps.itz-k2m7zn.infra01-lb.fra02.techzone.ibm.com(443)')
+```
 
 
-## MQ web console
+### MQ web console
 
 https://localhost:9443/ibmmq/console
 
