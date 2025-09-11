@@ -33,7 +33,7 @@ So far, we have:
 - queuemanager.crt
 - queuemanager.key
 
-- Create secret in the OpenShift namespace where the queue manager instance will be created
+Create secret in the OpenShift namespace where the queue manager instance will be created:
 ```sh
 oc create secret generic queuemanager --type="kubernetes.io/tls" --from-file=tls.key=queuemanager.key --from-file=tls.crt=queuemanager.crt --from-file=ca.crt
 ```
