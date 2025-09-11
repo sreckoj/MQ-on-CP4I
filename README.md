@@ -124,3 +124,9 @@ spec:
 ```
 
 ## EXAMPLE 1: Testing QM to QM connection using Podman
+
+We will run an instance of queue manager locally in the Podman container and create a channel to the queue manager running on OpenShift. 
+
+The following picture shows the test configuration:
+
+![QM to QM with podman](images/qm2qm-podman.png)
