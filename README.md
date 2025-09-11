@@ -130,3 +130,12 @@ We will run an instance of queue manager locally in the Podman container and cre
 The following picture shows the test configuration:
 
 ![QM to QM with podman](images/qm2qm-podman.png)
+
+### Create a receiver channel and local queue on the queue manager on OpenShift
+
+Update the ConfigMap by adding the following MQSC commands
+
+```sh
+DEFINE CHANNEL(QM1.TO.QM2) CHLTYPE(RCVR) SSLCIPH(ANY_TLS12_OR_HIGHER) SSLCAUTH(OPTIONAL)
+DEFINE QLOCAL(TESTQ) REPLACE
+```
