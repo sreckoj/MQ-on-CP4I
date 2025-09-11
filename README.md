@@ -64,3 +64,61 @@ data:
         EntryPoints=14
         SecurityPolicy=UserExternal
 ```
+
+### Create queue manager
+
+Note how the previously created ConfigMap and TLS secret are referenced. 
+
+Please note also that the namespace is *qmtest* - change it to your namespace. Please accept license before applying YAML by changing *spec.license.accept* from *false* to *true*.
+
+```yaml
+apiVersion: mq.ibm.com/v1beta1
+kind: QueueManager
+metadata:
+  name: qm2
+  namespace: qmtest
+spec:
+  license:
+    accept: false
+    license: L-CYPF-CRPF3H
+    use: NonProduction
+  queueManager:
+    name: QM2
+    resources:
+      limits:
+        cpu: 500m
+      requests:
+        cpu: 500m
+    mqsc:
+    - configMap:
+        name: queuemanager-configmap
+        items:
+        - queuemanager.mqsc
+    ini:
+    - configMap:
+        name: queuemanager-configmap
+        items:
+        - queuemanager.ini
+    storage:
+      queueManager:
+        type: ephemeral
+    # availability:
+    #   type: NativeHA
+  version:  9.4.3.0-r2
+  web:
+    console:
+      authentication:
+        provider: integration-keycloak
+      authorization:
+        provider: integration-keycloak
+    enabled: true
+  pki:
+    keys:
+      - name: default
+        secret:
+          secretName: queuemanager
+          items:
+            - tls.key
+            - tls.crt
+            - ca.crt
+```
