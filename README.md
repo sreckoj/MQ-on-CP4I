@@ -26,4 +26,15 @@ Create queue manager certificate signed with CA:
 openssl x509 -req -in queuemanager.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out queuemanager.crt -days 365 -sha512
 ```
 
+## Create secret with queue manager certificates
+
+So far, we have:
+- ca.crt
+- queuemanager.crt
+- queuemanager.key
+
+- Create secret in the OpenShift namespace where the queue manager instance will be created
+```sh
+oc create secret generic queuemanager --type="kubernetes.io/tls" --from-file=tls.key=queuemanager.key --from-file=tls.crt=queuemanager.crt --from-file=ca.crt
+```
 
