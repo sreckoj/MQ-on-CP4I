@@ -40,3 +40,27 @@ Create secret in the OpenShift namespace where the queue manager instance will b
 oc create secret generic queuemanager --type="kubernetes.io/tls" --from-file=tls.key=queuemanager.key --from-file=tls.crt=queuemanager.crt --from-file=ca.crt
 ```
 
+### Prepare queue manager configuration
+
+This is an example of the ConfigMap with the MQ minimal configuration. In the following examples, we will create variations of it with different configurations.
+
+Create the ConfigMap in the same namespace where the queue manager instance will be running.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: queuemanager-configmap
+data:
+  queuemanager.mqsc: |
+    ALTER AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS)  AUTHTYPE(IDPWOS) CHCKCLNT(NONE) CHCKLOCL(NONE)
+    REFRESH SECURITY TYPE(CONNAUTH)
+
+    * More MQSC commands...
+
+  queuemanager.ini: |
+    Service:
+        Name=AuthorizationService
+        EntryPoints=14
+        SecurityPolicy=UserExternal
+```
