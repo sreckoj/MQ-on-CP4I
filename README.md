@@ -299,11 +299,17 @@ exit
 
 ### Test
 
-Open the web console of the local queue manager
+Open the web console of the local queue manager<br>
 https://localhost:9443/ibmmq/console
 
-Find the remote queue:
+Find the remote queue and select "Create message":
 
-![](/images/Snip20250912_10.png)
+![](/images/Snip20250912_11.png)
+
+Write and send the message:
+
+![](/images/Snip20250912_12.png)
+
+
 
 
