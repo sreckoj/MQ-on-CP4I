@@ -283,6 +283,16 @@ START CHANNEL('QM1.TO.QM2')
 DISPLAY CHSTATUS('QM1.TO.QM2')
 ```
 
+Exit MQSC
+```sh
+END
+```
+
+Exit container
+```sh
+exit
+```
+
 ### MQ web console
 
 https://localhost:9443/ibmmq/console
