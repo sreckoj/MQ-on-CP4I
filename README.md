@@ -310,6 +310,13 @@ Write and send the message:
 
 ![](/images/Snip20250912_12.png)
 
+Now, open the console of the queue manager on CP4I and find the local queue:
+
+![](/images/Snip20250912_13.png)
+
+Our message should appear in it:
+
+![](/images/Snip20250912_14.png)
 
 
 
