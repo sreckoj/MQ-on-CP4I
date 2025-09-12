@@ -1,7 +1,7 @@
 # Accessing IBM MQ queue manager running on CP4I (OpenShift)
 
 
->🚧 🚧 🚧 NOTE: This is a work in progress. It's not finished yet. 🚧 🚧 🚧
+>🚧 🚧 🚧 **NOTE**: This is a work in progress. It's not finished yet. 🚧 🚧 🚧
 
 
 ## Prepare a queue manager on OpenShift
@@ -198,9 +198,9 @@ In my installation it is:
 
 ### Pull MQ image on the local machine
 
->Note 1: We are using *podman* here. The same commands can be executed using *docker* CLI. 
+>**Note 1**: We are using *podman* here. The same commands can be executed using *docker* CLI. 
 
->Note 2: If you are using Windows or Mac, you may need to start the podman machine first:<br> `podman machine start` <br>See podman's documentation for the details.
+>**Note 2**: If you are using Windows or Mac, you may need to start the podman machine first:<br> `podman machine start` <br>See podman's documentation for the details.
 
 Pull the image from IBM's public registry:
 ```sh
@@ -218,7 +218,7 @@ podman volume create qm1data
 
 There are several environment variables that can be provided to the container. Please see https://github.com/ibm-messaging/mq-container/blob/master/docs/usage.md for more details. 
 
->Note: One of the things that we do in the example provided below is mounting the *workdir* directory to the directory inside the contntainer (*--volume /Users/sreckojanjic/MQ/workdir:/tmp/workdir*) so that the previously created certificates are available in the container. This is probably not the best way for managing containers but it is good enough for testing. 
+>**Note**: One of the things that we do in the example provided below is mounting the *workdir* directory to the directory inside the contntainer (*--volume /Users/sreckojanjic/MQ/workdir:/tmp/workdir*) so that the previously created certificates are available in the container. This is probably not the best way for managing containers but it is good enough for testing. 
 
 Run:
 ```sh
@@ -244,7 +244,7 @@ Copy the certificate of the other queue manager from the previously mounted temp
 cp /tmp/workdir/queuemanager.crt .
 ```
 
->Note: Because we created the certificate for the queue manager running on OpenShift, it was already available in the working directory. The alternative way is to obtain the certificate using *openssl*. First detect the host name from the queue manager's route: `export QMGR_HOST=$(oc get route qm2-ibm-mq-qm -o jsonpath="{.spec.host}")` Then extract and store the certificate:`openssl s_client -connect $QMGR_HOST:443 -servername $QMGR_HOST -showcerts | openssl x509 > queuemanager.crt`
+>**Note**: Because we created the certificate for the queue manager running on OpenShift, it was already available in the working directory. The alternative way is to obtain the certificate using *openssl*. First detect the host name from the queue manager's route: `export QMGR_HOST=$(oc get route qm2-ibm-mq-qm -o jsonpath="{.spec.host}")` Then extract and store the certificate:`openssl s_client -connect $QMGR_HOST:443 -servername $QMGR_HOST -showcerts | openssl x509 > queuemanager.crt`
 
 Create key database:
 ```sh
