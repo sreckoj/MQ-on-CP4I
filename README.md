@@ -1,6 +1,8 @@
 # Accessing IBM MQ queue manager running on CP4I (OpenShift)
 
->NOTE: 🚧 This is a work in progress. It's not finished yet. 🚧 
+<h1>
+>🚧 NOTE: This is a work in progress. It's not finished yet. 🚧 
+</h1>
 
 ## Prepare a queue manager on OpenShift
 
