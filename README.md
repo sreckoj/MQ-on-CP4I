@@ -297,9 +297,13 @@ Exit container
 exit
 ```
 
-### MQ web console
+### Test
 
+Open the web console of the local queue manager
 https://localhost:9443/ibmmq/console
 
+Find the remote queue:
+
+![](/images/Snip20250912_10.png)
 
 
