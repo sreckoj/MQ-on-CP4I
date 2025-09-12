@@ -269,9 +269,19 @@ DEFINE QREMOTE('RTESTQ') RNAME('TESTQ') RQMNAME('QM2') XMITQ('TO.QM2')
 
 Define sender channel - please note that we use here previously obtained route hostname and port 443:
 ```sh
-DEFINE CHANNEL('QM1.TO.QM2') CHLTYPE(SDR) TRPTYPE(TCP) XMITQ('TO.QM2') SSLCIPH(ANY_TLS12_OR_HIGHER) SSLCAUTH(OPTIONAL) CONNAME('qm2-ibm-mq-qm-qmtest.apps.itz-k2m7zn.infra01-lb.fra02.techzone.ibm.com(443)')
+DEFINE CHANNEL('QM1.TO.QM2') CHLTYPE(SDR) TRPTYPE(TCP) XMITQ('TO.QM2') SSLCIPH(ANY_TLS12_OR_HIGHER) CONNAME('qm2-ibm-mq-qm-qmtest.apps.itz-k2m7zn.infra01-lb.fra02.techzone.ibm.com(443)')
 ```
 
+Refresh security settings for certificates to take effect:
+```sh
+REFRESH SECURITY(*)
+```
+
+Start channel and display it's status:
+```sh
+START CHANNEL('QM1.TO.QM2')
+DISPLAY CHSTATUS('QM1.TO.QM2')
+```
 
 ### MQ web console
 
