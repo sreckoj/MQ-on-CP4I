@@ -244,6 +244,12 @@ Copy the certificate of the other queue manager from the previously mounted temp
 cp /tmp/workdir/queuemanager.crt .
 ```
 
+>Note: Because we created the certificate for the queue manager running on OpenShift, it was already available in the working directory. The alternative way is to obtain the certificate using *openssl*. First detect the host name from the queue manager's route:
+```
+export QMGR_HOST=`oc get route qm2-ibm-mq-qm -o jsonpath="{.spec.host}"`
+```
+Then extract and store the certificate:<br> `openssl s_client -connect $QMGR_HOST:443 -servername $QMGR_HOST -showcerts | openssl x509 > qm2-qmgr.crt`
+
 Create key database:
 ```sh
 runmqakm -keydb -create -db key.kdb -type cms -pw passw0rd -stash
