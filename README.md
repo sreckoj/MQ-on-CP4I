@@ -239,9 +239,9 @@ Navigate to the location where certificates are stored:
 cd /var/mqm/qmgrs/QM1/ssl
 ```
 
-Copy self-signed CA certificate from the previously mounted temporary directory:
+Copy the certificate of the other queue manager from the previously mounted temporary directory:
 ```sh
-cp /tmp/workdir/ca.crt .
+cp /tmp/workdir/queuemanager.crt .
 ```
 
 Create key database:
@@ -251,7 +251,7 @@ runmqakm -keydb -create -db key.kdb -type cms -pw passw0rd -stash
 
 Store the certificate to it:
 ```sh
-runmqakm -cert -add -db key.kdb -pw passw0rd -label remoteca -file ca.crt
+runmqakm -cert -add -db key.kdb -pw passw0rd -label qm2 -file queuemanager.crt
 ```
 
 Run MQSC
