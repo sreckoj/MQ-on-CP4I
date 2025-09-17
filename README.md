@@ -20,6 +20,7 @@
   - [Configure the local queue manager](#qm2qm-local-cfg)
   - [Test](#qm2qm-test)
 - [EXAMPLE 2: mTLS between queue managers](#qm2qm-mtls)
+  - [Create certificates for onprem (podman) queue manager](#qm2qm-mtls-certificates)
 
 <br>
 
@@ -371,3 +372,19 @@ Our message should appear in it:
 ## EXAMPLE 2: mTLS between queue managers
 
 This is a similar configuration to that described in EXAMPLE 1, using mTLS instead of standard TLS. To implement it, please see first [Prepare queue manager on OpenShift](#qm-on-ocp) and [EXAMPLE 1: Testing QM to QM connection using Podman](#qm2qm) and then implement differences described here. 
+
+<a name="qm2qm-mtls-certificates"></a>
+
+### Create certificates for onprem (podman) queue manager
+
+We will use the same CA as we used for the queue manager on OpenShift. Since in our example the local queue manager is called QM1, we will use this name for the files and the certificate common name. 
+
+Create key and certificate signing request
+```sh
+openssl req -new -nodes -out qm1.csr -newkey rsa:4096 -keyout qm1.key -subj '/CN=qm1'
+```
+
+Create and sign the certificate
+```sh
+openssl x509 -req -in qm1.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out qm1.crt -days 365 -sha512
+```
