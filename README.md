@@ -22,6 +22,7 @@
 - [EXAMPLE 2: mTLS between queue managers](#qm2qm-mtls)
   - [Create certificates for onprem (podman) queue manager](#qm2qm-mtls-certificates)
   - [Add onprem queue manager key and certificate to key.kdb](#qm2qm-mtls-key-kdb)
+  - [Refresh security](#qm2qm-mtls-refresh-sec)
 
 <br>
 
@@ -407,4 +408,14 @@ openssl pkcs12 -export -in "qm1.crt" -name "qm1" -certfile "ca.crt" -inkey "qm1.
 Import PKCS#12 to key database
 ```sh
 runmqakm -cert -import -file qm1.p12 -pw passw0rd -type p12 -target key.kdb -target_pw passw0rd -label qm1
+```
+
+<a name="qm2qm-mtls-refresh-sec"></a>
+
+### Refresh security 
+
+```sh
+runqmsc QM1
+REFRESH SECURITY(*)
+END
 ```
