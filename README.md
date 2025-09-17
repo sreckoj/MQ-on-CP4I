@@ -3,8 +3,19 @@
 
 >🚧 🚧 🚧 **NOTE**: This is a work in progress. It's not finished yet. 🚧 🚧 🚧
 
+**Table of contents**
 
-## Prepare a queue manager on OpenShift
+- [Prepare queue manager on OpenShift](#qm-on-ocp)
+  - [Prepare certificates](#qm-on-ocp-certificates)
+  - [Create secret with queue manager certificates](#qm-on-ocp-secret)
+  - [Prepare queue manager configuration](#qm-on-ocp-config-map)
+  - [Create queue manager](#qm-on-ocp-create)
+
+<a name="qm-on-ocp"></a>
+
+## Prepare queue manager on OpenShift
+
+<a name="qm-on-ocp-certificates"></a>
 
 ### Prepare certificates
 
@@ -30,6 +41,8 @@ Create queue manager certificate signed with CA:
 openssl x509 -req -in queuemanager.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out queuemanager.crt -days 365 -sha512
 ```
 
+<a name="qm-on-ocp-secret"></a>
+
 ### Create secret with queue manager certificates
 
 So far, we have:
@@ -41,6 +54,8 @@ Create secret in the OpenShift namespace where the queue manager instance will b
 ```sh
 oc create secret generic queuemanager --type="kubernetes.io/tls" --from-file=tls.key=queuemanager.key --from-file=tls.crt=queuemanager.crt --from-file=ca.crt
 ```
+
+<a name="qm-on-ocp-config-map"></a>
 
 ### Prepare queue manager configuration
 
@@ -66,6 +81,8 @@ data:
         EntryPoints=14
         SecurityPolicy=UserExternal
 ```
+
+<a name="qm-on-ocp-create"></a>
 
 ### Create queue manager
 
