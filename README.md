@@ -10,6 +10,17 @@
   - [Create secret with queue manager certificates](#qm-on-ocp-secret)
   - [Prepare queue manager configuration](#qm-on-ocp-config-map)
   - [Create queue manager](#qm-on-ocp-create)
+- [EXAMPLE 1: Testing QM to QM connection using Podman](#qm2qm)
+  - [Create a receiver channel and local queue on the queue manager on OpenShift](#qm2qm-rvcr-channel)
+  - [Create SNI route for the receiver channel QM1.TO.QM2](#qm2qm-sni-route)
+  - [Determine the hostname of the MQ running on OpenShift](#qm2qm-qm-hostname)
+  - [Pull MQ image on the local machine](#qm2qm-pull-image)
+  - [Create volume](#qm2qm-volume)
+  - [Run container](#qm2qm-run-container)
+  - [Configure the local queue manager](#qm2qm-local-cfg)
+  - [Test](#qm2qm-test)
+
+<br>
 
 <a name="qm-on-ocp"></a>
 
@@ -142,6 +153,8 @@ spec:
             - ca.crt
 ```
 
+<a name="qm2qm"></a>
+
 ## EXAMPLE 1: Testing QM to QM connection using Podman
 
 We will run an instance of queue manager locally in the Podman container and create a channel to the queue manager running on OpenShift. 
@@ -149,6 +162,8 @@ We will run an instance of queue manager locally in the Podman container and cre
 The following picture shows the test configuration:
 
 ![QM to QM with podman](images/qm2qm-podman.png)
+
+<a name="qm2qm-rvcr-channel"></a>
 
 ### Create a receiver channel and local queue on the queue manager on OpenShift
 
@@ -160,6 +175,8 @@ DEFINE QLOCAL(TESTQ) REPLACE
 ```
 
 **Restart (delete) mq pod** to apply change in the ConfigMap. If the queue manager instance is called *qm2* and if it is a single instance the pod name is *qm2-ibm-mq-0*.
+
+<a name="qm2qm-sni-route"></a>
 
 ### Create SNI route for the receiver channel QM1.TO.QM2
 
@@ -194,6 +211,8 @@ spec:
     termination: passthrough
 ```
 
+<a name="qm2qm-qm-hostname"></a>
+
 ### Determine the hostname of the MQ running on OpenShift
 
 Use the "normal" (not SNI) MQ route. If the queue manager resource name is *qm2* like in this example, the route name is by default: *qm2-ibm-mq-qm*.
@@ -213,6 +232,8 @@ oc get route qm2-ibm-mq-qm -o jsonpath="{.spec.host}"
 In my installation it is:
 *qm2-ibm-mq-qm-qmtest.apps.itz-k2m7zn.infra01-lb.fra02.techzone.ibm.com*
 
+<a name="qm2qm-pull-image"></a>
+
 ### Pull MQ image on the local machine
 
 >**Note 1**: We are using *podman* here. The same commands can be executed using *docker* CLI. 
@@ -224,12 +245,16 @@ Pull the image from IBM's public registry:
 podman pull icr.io/ibm-messaging/mq:latest
 ```
 
+<a name="qm2qm-volume"></a>
+
 ### Create volume
 
 It will be mounted to the container and will be used for MQ peristent data
 ```sh
 podman volume create qm1data
 ```
+
+<a name="qm2qm-run-container"></a>
 
 ### Run container
 
@@ -241,6 +266,8 @@ Run:
 ```sh
 podman run --env LICENSE=accept --env MQ_QMGR_NAME=QM1 --volume qm1data:/mnt/mqm --volume /Users/sreckojanjic/MQ/workdir:/tmp/workdir --publish 1414:1414 --publish 9443:9443 --detach --env MQ_APP_USER=app --env MQ_APP_PASSWORD=pa55w0rd --env MQ_ADMIN_USER=admin --env MQ_ADMIN_PASSWORD=pa55w0rd --name QM1 icr.io/ibm-messaging/mq:latest
 ```
+
+<a name="qm2qm-local-cfg"></a>
 
 ### Configure the local queue manager
 
@@ -313,6 +340,8 @@ Exit container
 ```sh
 exit
 ```
+
+<a name="qm2qm-test"></a>
 
 ### Test
 
