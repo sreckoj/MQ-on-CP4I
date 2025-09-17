@@ -25,6 +25,7 @@
   - [Refresh security](#qm2qm-mtls-refresh-sec)
   - [Change configuration on QM on OpenShift](#qm2qm-mtls-qm-on-ocp-config)
   - [Create trust store secret](#qm2qm-mtls-trust-store)
+  - [Correct Queue Manager definition to include trustsore](#qm2qm-mtls-qmgr-on-ocp)
 
 <br>
 
@@ -457,3 +458,67 @@ Create secret that contains certificate of the onprem queue manager and CA certi
 oc create secret generic qmgr-truststore --from-file=tls.crt=qm1.crt --from-file=ca.crt
 ```
 
+<a name="qm2qm-mtls-qmgr-on-ocp"></a>
+
+### Correct Queue Manager definition to include trustsore
+
+To update the existing queue manager, go to the OpenShift web console, select *Operators > Installed Operator*. Find MQ operator and click on *Queue Manager* CRD. From the list click on queue manager CR and select YAML view. The alternative is to open CP4I UI (Platform Navigator), find the queue manager instance and from the context menu ("three dots") select Edit. Pod will be automatically restarted.
+
+```yaml
+apiVersion: mq.ibm.com/v1beta1
+kind: QueueManager
+metadata:
+  name: qm2
+  namespace: qmtest
+spec:
+  license:
+    accept: false
+    license: L-CYPF-CRPF3H
+    use: NonProduction
+  queueManager:
+    name: QM2
+    resources:
+      limits:
+        cpu: 500m
+      requests:
+        cpu: 500m
+    mqsc:
+    - configMap:
+        name: queuemanager-configmap
+        items:
+        - queuemanager.mqsc
+    ini:
+    - configMap:
+        name: queuemanager-configmap
+        items:
+        - queuemanager.ini
+    storage:
+      queueManager:
+        type: ephemeral
+    # availability:
+    #   type: NativeHA
+  version:  9.4.3.0-r2
+  web:
+    console:
+      authentication:
+        provider: integration-keycloak
+      authorization:
+        provider: integration-keycloak
+    enabled: true
+  pki:
+    keys:
+      - name: default
+        secret:
+          secretName: queuemanager
+          items:
+            - tls.key
+            - tls.crt
+            - ca.crt
+    trust:                 # <---------- Add this
+      - name: qm1
+        secret: 
+          secretName: qmgr-truststore
+          items: 
+            - tls.crt
+            - ca.crt
+```
