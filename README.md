@@ -24,6 +24,7 @@
   - [Add onprem queue manager key and certificate to key.kdb](#qm2qm-mtls-key-kdb)
   - [Refresh security](#qm2qm-mtls-refresh-sec)
   - [Change configuration on QM on OpenShift](#qm2qm-mtls-qm-on-ocp-config)
+  - [Create trust store secret](#qm2qm-mtls-trust-store)
 
 <br>
 
@@ -444,5 +445,15 @@ data:
     REFRESH SECURITY TYPE(CONNAUTH)
     DEFINE CHANNEL(QM1.TO.QM2) CHLTYPE(RCVR) SSLCIPH(ANY_TLS12_OR_HIGHER) SSLCAUTH(REQUIRED)
     DEFINE QLOCAL(TESTQ) REPLACE
+```
+
+<a name="qm2qm-mtls-trust-store"></a>
+
+### Create trust store secret
+
+Create secret that contains certificate of the onprem queue manager and CA certificate:
+
+```sh
+oc create secret generic qmgr-truststore --from-file=tls.crt=qm1.crt --from-file=ca.crt
 ```
 
