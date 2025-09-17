@@ -3,7 +3,7 @@
 
 >🚧 🚧 🚧 **NOTE**: This is a work in progress. It's not finished yet. 🚧 🚧 🚧
 
-**Table of contents**
+**Table of contents:**
 
 - [Prepare queue manager on OpenShift](#qm-on-ocp)
   - [Prepare certificates](#qm-on-ocp-certificates)
@@ -23,6 +23,7 @@
   - [Create certificates for onprem (podman) queue manager](#qm2qm-mtls-certificates)
   - [Add onprem queue manager key and certificate to key.kdb](#qm2qm-mtls-key-kdb)
   - [Refresh security](#qm2qm-mtls-refresh-sec)
+  - [Change configuration on QM on OpenShift](#qm2qm-mtls-qm-on-ocp-config)
 
 <br>
 
@@ -419,3 +420,29 @@ runqmsc QM1
 REFRESH SECURITY(*)
 END
 ```
+
+<a name="qm2qm-mtls-qm-on-ocp-config"></a>
+
+### Change configuration on QM on OpenShift
+
+Correct ConfigMap - cahnge the receiver channel SSLCAUTH to REQUIRED:
+
+```yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: queuemanager-configmap
+  namespace: qmtest
+data:
+  queuemanager.ini: |
+    Service:
+      Name=AuthorizationService
+      EntryPoints=14
+      SecurityPolicy=UserExternal
+  queuemanager.mqsc: |
+    ALTER AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS)  AUTHTYPE(IDPWOS) CHCKCLNT(NONE)
+    REFRESH SECURITY TYPE(CONNAUTH)
+    DEFINE CHANNEL(QM1.TO.QM2) CHLTYPE(RCVR) SSLCIPH(ANY_TLS12_OR_HIGHER) SSLCAUTH(REQUIRED)
+    DEFINE QLOCAL(TESTQ) REPLACE
+```
+
