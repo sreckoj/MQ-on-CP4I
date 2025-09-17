@@ -19,6 +19,7 @@
   - [Run container](#qm2qm-run-container)
   - [Configure the local queue manager](#qm2qm-local-cfg)
   - [Test](#qm2qm-test)
+- [EXAMPLE 2: mTLS between queue managers](#qm2qm-mtls)
 
 <br>
 
@@ -365,4 +366,8 @@ Our message should appear in it:
 ![](/images/Snip20250912_14.png)
 
 
+<a name="qm2qm-mtls"></a>
 
+## EXAMPLE 2: mTLS between queue managers
+
+This is a similar configuration to that described in EXAMPLE 1, using mTLS instead of standard TLS. To implement it, please see first [Prepare queue manager on OpenShift](#qm-on-ocp) and [EXAMPLE 1: Testing QM to QM connection using Podman](#qm2qm) and then implement differences described here. 
