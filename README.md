@@ -21,6 +21,7 @@
   - [Test](#qm2qm-test)
 - [EXAMPLE 2: mTLS between queue managers](#qm2qm-mtls)
   - [Create certificates for onprem (podman) queue manager](#qm2qm-mtls-certificates)
+  - [Add onprem queue manager key and certificate to key.kdb](#qm2qm-mtls-key-kdb)
 
 <br>
 
@@ -387,4 +388,23 @@ openssl req -new -nodes -out qm1.csr -newkey rsa:4096 -keyout qm1.key -subj '/CN
 Create and sign the certificate
 ```sh
 openssl x509 -req -in qm1.csr -CA ca.crt -CAkey ca.key -CAcreateserial -out qm1.crt -days 365 -sha512
+```
+
+<a name="qm2qm-mtls-key-kdb"></a>
+
+### Add onprem queue manager key and certificate to key.kdb
+
+Go to the container and navigate to:
+```sh
+cd /var/mqm/qmgrs/QM1/ssl
+```
+
+Add onprem queue manager key and cert to PKCS#12
+```sh
+openssl pkcs12 -export -in "qm1.crt" -name "qm1" -certfile "ca.crt" -inkey "qm1.key" -out "qm1.p12" -passout pass:passw0rd
+```
+
+Import PKCS#12 to key database
+```sh
+runmqakm -cert -import -file qm1.p12 -pw passw0rd -type p12 -target key.kdb -target_pw passw0rd -label qm1
 ```
